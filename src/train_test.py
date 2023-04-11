@@ -34,10 +34,10 @@ def train_step(
 
         with torch.no_grad():
             predictions = torch.argmax(output, dim=1)
-            train_accuracy += (predictions == targets).float().sum()
+            train_accuracy += (predictions == targets).float().mean()
 
             # Append true and predicted labels
-            y_true.extend(y.cpu().numpy())
+            y_true.extend(targets.cpu().numpy())
             y_pred.extend(predictions.cpu().numpy())
 
         optimizer.zero_grad()
@@ -65,10 +65,10 @@ def test_step(
             imgs, targets = imgs.to(device), targets.type(torch.LongTensor).to(device)
             output = model.forward(imgs)
             predictions = torch.argmax(output, dim=1)
-            test_accuracy += (predictions == targets).float().sum()
+            test_accuracy += (predictions == targets).float().mean()
 
             # Append true and predicted labels
-            y_true.extend(y.cpu().numpy())
+            y_true.extend(targets.cpu().numpy())
             y_pred.extend(predictions.cpu().numpy())
 
             loss = loss_function(output, targets)
@@ -85,12 +85,10 @@ def train_model(model, n_epochs, train_sampler, test_sampler, optimizer, loss_fu
     mean_losses_test = []
 
     for e in range(n_epochs):
-        best_accuracy = 0.0
-
         # Training:
         losses, train_acc, train_macro_f1 = train_step(model, train_sampler, optimizer, loss_function, device)
         # Calculating and printing statistics:
-        train_acc /= train_size
+        train_acc /= len(train_sampler)
         mean_loss = sum(losses) / len(losses)
         mean_losses_train.append(mean_loss)
         print(f"\nEpoch {e + 1} training done, loss on train set: {mean_loss}, macro f1 on train set: {train_macro_f1:.4f}\n")
@@ -98,7 +96,7 @@ def train_model(model, n_epochs, train_sampler, test_sampler, optimizer, loss_fu
         # Testing:
         losses, test_acc, test_macro_f1 = test_step(model, test_sampler, loss_function, device)
         # # Calculating and printing statistics:
-        test_acc /= test_size
+        test_acc /= len(test_sampler)
         mean_loss = sum(losses) / len(losses)
         mean_losses_test.append(mean_loss)
         print(f"\nEpoch {e + 1} testing done, loss on test set: {mean_loss}, macro f1 on test set: {test_macro_f1:.4f}\n")
@@ -111,7 +109,7 @@ def train_model(model, n_epochs, train_sampler, test_sampler, optimizer, loss_fu
             torch.save(model.state_dict(), 'model_weights/best_checkpoint.model')
             best_f1 = test_macro_f1
 
-        ### Plotting during training
+        # Plotting during training
         plotext.clf()
         plotext.scatter(mean_losses_train, label="train")
         plotext.scatter(mean_losses_test, label="test")
