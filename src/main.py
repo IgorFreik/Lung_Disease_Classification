@@ -19,13 +19,14 @@ if __name__ == '__main__':
     # Define model
     model = BaselineSimple().to(device)
 
-    # Define things for training
+    # Define fun stuff for training
     optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=0.1)
     loss_fn = nn.CrossEntropyLoss()
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer)
+    nb_epochs = 1
 
     # Train the model
-    train_model(model, 1, train_loader, test_loader, optimizer, loss_fn, scheduler, device)
+    train_model(model, nb_epochs, train_loader, test_loader, optimizer, loss_fn, scheduler, device)
 
     # Show model stats
     show_confusion_matrix(model, test_loader, device)
@@ -33,4 +34,3 @@ if __name__ == '__main__':
 
     # Open web interface
     create_interface(model, device)
-
