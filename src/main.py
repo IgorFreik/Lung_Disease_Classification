@@ -2,7 +2,7 @@ import torch.cuda
 import torch.optim as optim
 import torch.nn as nn
 from models import BaselineSimple
-from data_preparation import download_data, train_test_split, get_loaders
+from data_preparation import download_data, get_loaders
 from interface import create_interface
 from train_test import train_model
 from model_ananlysis import show_confusion_matrix, print_statistical_metrics
@@ -14,7 +14,6 @@ if __name__ == '__main__':
 
     # Download data -- 100'000 images in high resolution. Will take significant time and space.
     download_data()
-    train_test_split()
     train_loader, test_loader = get_loaders()
 
     # Define model

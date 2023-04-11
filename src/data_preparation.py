@@ -5,7 +5,7 @@ import tarfile
 import torchvision.transforms as tt
 import torch
 from torch.utils.data import DataLoader
-import torchvision.datasets as dset
+import torchvision
 
 # URLs for the zip files. The data is publicly available at https://nihcc.app.box.com/v/ChestXray-NIHCC/.
 links = [
@@ -46,15 +46,16 @@ def download_data():
             file.close()
 
 
-def train_test_split():
-    ...
-
-
 def get_loaders(train_batch_size=64, test_batch_size=32):
-    train_path = ...
-    test_path = ...
+    data_path = '../data/images'
 
-    transforms_train = tt.Compose([
+    full_dataset = torchvision.datasets.Imagefolder(data_path)
+    train_size = int(0.8 * len(full_dataset))
+
+    train_data = torch.utils.data.Subset(full_dataset, range(train_size))
+    test_data = torch.utils.data.Subset(full_dataset, range(train_size, len(full_dataset)))
+
+    train_data.dataset.transform = tt.Compose([
         tt.Resize((224, 224)),
         tt.RandomHorizontalFlip(p=0.5),
         tt.RandomRotation(degrees=10),
@@ -62,15 +63,11 @@ def get_loaders(train_batch_size=64, test_batch_size=32):
         tt.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
     ])
 
-    transforms_test = tt.Compose([
+    test_data.dataset.transform = tt.Compose([
         tt.Resize((224, 224)),
         tt.ToTensor(),
         tt.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
     ])
-
-    # Load training and test data with transformations
-    train_data = dset.ImageFolder(root=train_path, transform=transforms_train)
-    test_data = dset.ImageFolder(root=test_path, transform=transforms_test)
 
     # Create data loaders
     train_loader = DataLoader(train_data, batch_size=train_batch_size, shuffle=True)
