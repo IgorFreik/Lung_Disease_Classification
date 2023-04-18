@@ -1,14 +1,14 @@
 import numpy as np
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
-from models import *
+from p2_models.models import *
 
 
 def interpret_with_GradCAM(model, target_layers, input_img, device) -> np.ndarray:
     """
     Plots the most important pixels of an image for the model prediction.
     """
-    if not target_layers and isinstance(model, BaselineSimple):
+    if not target_layers and isinstance(model, BaseNet):
         # This is the target layer for ResNet18 model
         target_layers = [model.layer4[-1]]
     else:

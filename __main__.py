@@ -1,11 +1,11 @@
-import torch.cuda
 import torch.optim as optim
-import torch.nn as nn
-from models import BaselineSimple
-from data_preparation import download_data, get_loaders
-from interface import create_interface
-from train_test import train_model
-from model_ananlysis import show_confusion_matrix, print_statistical_metrics
+
+from p1_preprocessing.get_loaders import get_loaders
+from p1_preprocessing.download_data import download_data
+from p2_models.models import *
+from p2_models.train_test import train_model
+from p3_analysis.model_ananlysis import show_confusion_matrix, print_statistical_metrics
+from web_interface import show_web_interface
 
 
 if __name__ == '__main__':
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     train_loader, test_loader = get_loaders()
 
     # Define model
-    model = BaselineSimple().to(device)
+    model = CheXNet(n_classes=14).to(device)
 
     # Define fun stuff for training
     optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=0.1)
@@ -33,4 +33,4 @@ if __name__ == '__main__':
     print_statistical_metrics(model, test_loader, device)
 
     # Open web interface
-    create_interface(model, device)
+    show_web_interface(model, device)

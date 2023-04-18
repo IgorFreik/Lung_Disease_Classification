@@ -2,10 +2,10 @@ import urllib.request
 from pathlib import Path
 import os
 import tarfile
-import torchvision.transforms as tt
-import torch
-from torch.utils.data import DataLoader
-import torchvision
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import numpy as np
+
 
 # URLs for the zip files. The data is publicly available at https://nihcc.app.box.com/v/ChestXray-NIHCC/.
 links = [
@@ -45,32 +45,8 @@ def download_data():
             file.extractall('../data/')
             file.close()
 
-
-def get_loaders(train_batch_size=64, test_batch_size=32):
-    data_path = '../data/images'
-
-    full_dataset = torchvision.datasets.Imagefolder(data_path)
-    train_size = int(0.8 * len(full_dataset))
-
-    train_data = torch.utils.data.Subset(full_dataset, range(train_size))
-    test_data = torch.utils.data.Subset(full_dataset, range(train_size, len(full_dataset)))
-
-    train_data.dataset.transform = tt.Compose([
-        tt.Resize((224, 224)),
-        tt.RandomHorizontalFlip(p=0.5),
-        tt.RandomRotation(degrees=10),
-        tt.ToTensor(),
-        tt.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
-    ])
-
-    test_data.dataset.transform = tt.Compose([
-        tt.Resize((224, 224)),
-        tt.ToTensor(),
-        tt.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
-    ])
-
-    # Create data loaders
-    train_loader = DataLoader(train_data, batch_size=train_batch_size, shuffle=True)
-    test_loader = DataLoader(test_data, batch_size=test_batch_size, shuffle=False)
-
-    return train_loader, test_loader
+        labels = pd.read_csv('../data/Data_Entry_2017_v2020.csv')
+        one_word_labels = labels['Finding Labels'].apply(lambda string: string.split('|')[0])
+        lab_enc = LabelEncoder()
+        one_word_labels = lab_enc.fit_transform(one_word_labels)
+        np.save('../data/labels.npy', one_word_labels)

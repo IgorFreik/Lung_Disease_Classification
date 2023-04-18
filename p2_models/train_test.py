@@ -1,6 +1,6 @@
 from tqdm import tqdm
 import torch
-from models import *
+from p2_models.models import *
 from typing import Callable, Iterable
 import torch.nn as nn
 from sklearn.metrics import f1_score
