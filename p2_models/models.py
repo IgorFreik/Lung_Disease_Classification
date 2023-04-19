@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import timm
+import torchvision.transforms as tt
 
 
 class BaseNet(nn.Module):
@@ -58,7 +59,37 @@ class CheXNet(HuggingFaceModel):
     def __init__(self, n_classes: int) -> None:
         """
         Initializes a CheXNet model.
+        :param n_classes: number of output classes.
         """
         super(CheXNet, self).__init__()
         self._model = timm.create_model('densenet121', pretrained=True)
         self._model.classifier = nn.Sequential(nn.Linear(1024, n_classes), nn.Softmax(dim=1))
+
+    def get_target_layers(self):
+        return [self._model.features[-1]]
+
+    def get_infer_transforms(self):
+        return tt.Compose([
+            tt.ToTensor(),
+            tt.Resize((224, 224))
+        ])
+
+
+class ResNet50(HuggingFaceModel):
+    def __init__(self, n_classes: int) -> None:
+        """
+        Initializes a CheXNet model.
+        :param n_classes: number of output classes.
+        """
+        super(ResNet50, self).__init__()
+        self._model = timm.create_model('resnet50', pretrained=True)
+        self._model.fc = nn.Sequential(nn.Linear(2048, n_classes), nn.Softmax(dim=1))
+
+    def get_target_layers(self):
+        return [self._model.layer4[-1]]
+
+    def get_infer_transforms(self):
+        return tt.Compose([
+            tt.ToTensor(),
+            tt.Resize((224, 224))
+        ])

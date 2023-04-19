@@ -4,25 +4,19 @@ from pytorch_grad_cam.utils.image import show_cam_on_image
 from p2_models.models import *
 
 
-def interpret_with_GradCAM(model, target_layers, input_img, device) -> np.ndarray:
+def interpret_with_GradCAM(model, input_img, device) -> np.ndarray:
     """
     Plots the most important pixels of an image for the model prediction.
     """
-    if not target_layers and isinstance(model, BaseNet):
-        # This is the target layer for ResNet18 model
-        target_layers = [model.layer4[-1]]
-    else:
-        raise NotImplemented
+    input_tensor = model.get_infer_transforms()(input_img)
+    input_tensor = input_tensor.to(device).unsqueeze(0)
 
-    input_tensor = input_img.to(device).unsqueeze(0)
-    input_img = input_img.numpy()
-
-    cam = GradCAM(model=model, target_layers=target_layers)
+    cam = GradCAM(model=model, target_layers=model.get_target_layers())
     targets = None
 
     grayscale_cam = cam(input_tensor=input_tensor, targets=targets)
     grayscale_cam = grayscale_cam[0, :]
 
-    rgb_img = np.repeat(input_img, 3, axis=0).reshape(128, 128, 3)
+    rgb_img = input_tensor[0].permute(1, 2, 0).numpy()
     visualization = show_cam_on_image(rgb_img, grayscale_cam)
     return visualization
