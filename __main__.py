@@ -17,7 +17,7 @@ if __name__ == '__main__':
     train_loader, test_loader = get_loaders()
 
     # Define model
-    model = CheXNet(n_classes=14).to(device)
+    model = CheXNet(n_classes=15).to(device)
 
     # Define fun stuff for training
     optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=0.1)

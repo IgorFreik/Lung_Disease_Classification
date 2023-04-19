@@ -6,7 +6,9 @@ from p3_analysis.interpretations import interpret_with_GradCAM
 # Import model
 from p2_models.models import *
 
-LABELS = ['Atelectasis', 'Effusion', 'Infiltration', 'No finding', 'Nodule', 'Pneumothorax']
+LABELS = ['Atelectasis' 'Cardiomegaly' 'Consolidation' 'Edema' 'Effusion',
+          'Emphysema' 'Fibrosis' 'Hernia' 'Infiltration' 'Mass' 'No Finding',
+          'Nodule' 'Pleural_Thickening' 'Pneumonia' 'Pneumothorax']
 
 
 def predict(inp, model, device):
@@ -18,24 +20,14 @@ def predict(inp, model, device):
     return {label: float(prob) for label, prob in zip(LABELS, predictions)}
 
 
-# def create_interface(model, device):
-#     # model = BaselineSimple().to(device)
-#     # model.load_state_dict(torch.load('model_weights/best_checkpoint.model'))
-#
-#     predict = lambda inp: forward(inp, model, device)
-#
-#     gr.Interface(fn=predict,
-#                  inputs=gr.Image(type="pil"),
-#                  outputs=gr.Label()).launch(share=True)
-
-
 def show_web_interface(model, device):
     """
     Runs a gradio web interface for the model.
     :param model: a LeafCounter class instance.
+    :param device: device: 'cuda'/'cpu'.
     """
     with gr.Blocks() as demo:
-        gr.Markdown("# Leaf counter with UNet++ and ResNet50")
+        gr.Markdown("# Lung Disease Classification")
 
         with gr.Row():
             im = gr.Image()
@@ -45,15 +37,15 @@ def show_web_interface(model, device):
                                                                                      model.get_target_layers(),
                                                                                      im, device)
 
-        btn = gr.Button(value="Count leafs")
+        btn = gr.Button(value="Get predictions")
         btn.click(predict_fn, inputs=[im], outputs=[txt, im])
 
         gr.Markdown("## Image Examples")
-        #
-        # gr.Examples(
-        #     examples=["../examples/leaf_im_big.png"],
-        #     inputs=im,
-        #     outputs=txt,
-        #     fn=predict_fn
-        # )
+
+        gr.Examples(
+            examples=["data/images/00000001_000.png"],
+            inputs=im,
+            outputs=txt,
+            fn=predict_fn
+        )
     demo.launch()
