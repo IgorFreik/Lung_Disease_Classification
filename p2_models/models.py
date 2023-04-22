@@ -51,8 +51,11 @@ class HuggingFaceModel(nn.Module):
         else:
             return self._model.parameters()
 
-    def get_target_layers(self):
-        raise NotImplemented
+    def get_infer_transforms(self):
+        return tt.Compose([
+            tt.ToTensor(),
+            tt.Resize((224, 224))
+        ])
 
 
 class CheXNet(HuggingFaceModel):
@@ -78,7 +81,7 @@ class CheXNet(HuggingFaceModel):
 class ResNet50(HuggingFaceModel):
     def __init__(self, n_classes: int) -> None:
         """
-        Initializes a CheXNet model.
+        Initializes a ResNet50 model.
         :param n_classes: number of output classes.
         """
         super(ResNet50, self).__init__()
@@ -87,9 +90,3 @@ class ResNet50(HuggingFaceModel):
 
     def get_target_layers(self):
         return [self._model.layer4[-1]]
-
-    def get_infer_transforms(self):
-        return tt.Compose([
-            tt.ToTensor(),
-            tt.Resize((224, 224))
-        ])
