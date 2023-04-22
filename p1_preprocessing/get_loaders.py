@@ -5,7 +5,7 @@ import torchvision.transforms as tt
 
 
 def get_loaders(train_batch_size=64, test_batch_size=32):
-    IMGS_PATH = './data/images'
+    IMGS_PATH = './data'
     LABELS_PATH = './data/labels.npy'
 
     aug_transforms = tt.Compose([
