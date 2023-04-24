@@ -90,3 +90,17 @@ class ResNet50(HuggingFaceModel):
 
     def get_target_layers(self):
         return [self._model.layer4[-1]]
+
+
+class ResNet18(HuggingFaceModel):
+    def __init__(self, n_classes: int) -> None:
+        """
+        Initializes a ResNet50 model.
+        :param n_classes: number of output classes.
+        """
+        super(ResNet18, self).__init__()
+        self._model = timm.create_model('resnet18', pretrained=True)
+        self._model.fc = nn.Sequential(nn.Linear(512, n_classes), nn.Softmax(dim=1))
+
+    def get_target_layers(self):
+        return [self._model.layer4[-1]]
