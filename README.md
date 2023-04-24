@@ -4,7 +4,7 @@
 
 The repository benchmarks various pre-trained models to reveal the best performing model for the task of lung disease classification. The used dataset: ChestX-ray14, which consists of 112k 1024x1024 pixel x-ray images of 14 distinct lung diseases as well as images of healthy individuals. 
 
-In addition, various augmentation methods were added to diversify the dataset.
+What the preprocessed images look like:
 
 <img src="./assets/data.png" width="700" height="350">
 
