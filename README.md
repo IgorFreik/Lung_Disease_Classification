@@ -6,7 +6,7 @@ The repository benchmarks various pre-trained models to reveal the best performi
 
 In addition, various augmentation methods were added to diversify the dataset.
 
-TBA: EXAMPLE OF AUG IMAGES 
+<img src="./assets/data.png" width="700" height="350">
 
 ### What the working system looks like
 
