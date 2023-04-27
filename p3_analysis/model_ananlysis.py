@@ -1,4 +1,4 @@
-from sklearn.metrics import f1_score, accuracy_score, mean_absolute_score
+from sklearn.metrics import f1_score, accuracy_score, mean_absolute_error
 
 
 def get_preds_targets(model, test_loader, device):
@@ -25,6 +25,6 @@ def print_statistical_metrics(model, test_loader, device):
     # Calculate metrics
     f1_score = f1_score(y_true, y_pred)
     accuracy = accuracy_score(y_true, y_pred)
-    mae = mean_absolute_score(y_true, y_pred)
+    mae = mean_absolute_error(y_true, y_pred)
 
     print(f'MAE: {mae}, F1-score: {f1_score}, Accuracy: {accuracy}')

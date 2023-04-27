@@ -20,11 +20,6 @@ TBA: GRADIO INTERFACE SCREEN
 | F1-score | None        | None        | None        |
 | Accuracy | None        | None        | None        |
 
-### How to run the project
-
-1. run in the terminal `pip install -r requirements.txt` to download the library requirements.
-
-2. run in terminal `python __main__.py` to download the models with obtianed weights, see the analysis for each model and the framework for each of the models. To re-train the models yourself run the following command in terminal: `python main.py --re_train True`. WARNING: re-training will take significant time and space (60 GB) due to the dataset size.
 
 ### System requirements
 

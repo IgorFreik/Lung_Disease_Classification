@@ -25,7 +25,7 @@ links = [
 ]
 
 
-def download_data():
+def download_data_if_none():
     # Download data if not already downloaded.
     if not Path(os.path.join(os.path.dirname(__file__), '../data')).exists():
         print('Creating data folder.')

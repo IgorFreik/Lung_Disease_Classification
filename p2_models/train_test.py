@@ -106,7 +106,7 @@ def train_model(model, n_epochs, train_sampler, test_sampler, optimizer, loss_fu
 
         # Save the best model
         if test_macro_f1 > best_f1:
-            torch.save(model.state_dict(), 'model_weights/best_checkpoint.model')
+            torch.save(model.state_dict(), './model_weights/best_checkpoint.model')
             best_f1 = test_macro_f1
 
         # Plotting during training
@@ -124,7 +124,7 @@ def train_model(model, n_epochs, train_sampler, test_sampler, optimizer, loss_fu
     # check if model_weights/ subdir exists
 
     # Saving the model
-    torch.save(model.state_dict(), f"model_weights/model_{now.month:02}_{now.day:02}_{now.hour}_{now.minute:02}.txt")
+    torch.save(model.state_dict(), f"./model_weights/model_{now.month:02}_{now.day:02}_{now.hour}_{now.minute:02}.txt")
 
     # Create plot of losses
     plt.figure(figsize=(9, 10), dpi=80)
