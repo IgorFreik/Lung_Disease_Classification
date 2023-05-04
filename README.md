@@ -8,19 +8,6 @@ What the preprocessed images look like:
 
 <img src="./assets/data.png" width="700" height="350">
 
-### What the working system looks like
-
-TBA: GRADIO INTERFACE SCREEN
-
-### Results
-
-|             | DenseNet121 | ResNet50 | EfficientNetv2 |
-| ----------- | ----------- | ----------- | ----------- |
-| MAE      | None       | None       | None       |
-| F1-score | None        | None        | None        |
-| Accuracy | None        | None        | None        |
-
-
 ### System requirements
 
 For using the models without re-training: 1 GB CUDA and 1 minute of execution / no CUDA and 5 minutes of execution.
